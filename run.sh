@@ -6,6 +6,7 @@ CALLER_ID="$1"
 echo REC_FILE;
 echo CALLER_ID
 source venv/bin/activate
+sleep 10
 python main.py --caller_id "${CALLER_ID}" --audio_path "${REC_FILE}"
 )&
 disown -h
