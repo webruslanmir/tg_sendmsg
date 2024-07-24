@@ -8,29 +8,39 @@ from dotenv import load_dotenv
 parser = argparse.ArgumentParser()
 
 # Добавление аргумента для каждой переменной
-parser.add_argument('--caller_id', help='Номер звонящего')
-parser.add_argument('--called_id', default='No data', help='Call to...')
+parser.add_argument('--caller_id', help='Incoming caller num')
+parser.add_argument('--ext_id', default='No data', help='Income asterisk extension')
+parser.add_argument('--audio_path', default='No data', help='Audio track.')
 
-# Разбор аргументов из командной строки
-args = parser.parse_args()
-CALLER_ID = args.caller_id
-CALLED_ID = args.called_id
 
 # Загрузка переменных окружения из файла .env
 load_dotenv()  # take environment variables from .env.
 
 
+# Разбор аргументов из командной строки
+args = parser.parse_args()
+CALLER_ID = args.caller_id
+EXTENSION_ID = args.ext_id
+AUDIO_PATH = args.audio_path
+
 # # Использование переменных окружения
 TOKEN = os.getenv('TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 
+
 bot = telebot.TeleBot(TOKEN)
 
 
-# def send_telegram_message(CALLER_ID, CALLED_ID):
-# '''В дальнейшем планируется прослеживаемость факта ответа на звонок и передача информации о ответившем абоненте'''
-#     text = f'Входящий звонок от { CALLER_ID } адресован для { CALLED_ID }'
-#     bot.send_message(CHAT_ID, text)
+def send_telegram_message(CALLER_ID, EXT_ID):
+    """
+    В дальнейшем планируется прослеживаемость
+    факта ответа на звонок и передача информации о ответившем абоненте
+    """
+    if EXT_ID != 'No data':
+        text = f'Входящий звонок от { CALLER_ID } на { EXT_ID }'
+    else:
+        text = f'Входящий звонок от {CALLER_ID}'
+    bot.send_message(CHAT_ID, text)
 
 
 def send_telegram_audio(audio_path):
@@ -40,10 +50,22 @@ def send_telegram_audio(audio_path):
     audio.close()
 
 
-def send_telegram_message(CALLER_ID):
-    text = f'Входящий звонок от { CALLER_ID }'
-    bot.send_message(CHAT_ID, text)
+def send_telegram_file(file_path, CALLER_ID, EXTENSION_ID):
+    """
+    Отправить файл с комментарием
+    """
+    text = f'Входящий звонок от {CALLER_ID} на {EXTENSION_ID}'
+    file = open(file_path, 'rb')
+    bot.send_document(CHAT_ID, file, caption=text)
+    file.close()
+
+# def send_telegram_message(CALLER_ID):
+#     text = f'Входящий звонок от { CALLER_ID }'
+#     bot.send_message(CHAT_ID, text)
 
 
 if '__main__' == __name__:
-    send_telegram_message(CALLER_ID)
+    if AUDIO_PATH != 'No data':
+        send_telegram_file(AUDIO_PATH, CALLER_ID, EXTENSION_ID)
+    else:
+        send_telegram_message(CALLER_ID, EXTENSION_ID)
