@@ -70,8 +70,8 @@ def send_telegram_file(file_path, CALLER_ID, EXTENSION_ID):
 
 
 if '__main__' == __name__:
-    with open("log.txt", "w") as file:
-        file.write(f'{formatted_time} -- {AUDIO_PATH}, {CALLER_ID}, {EXTENSION_ID} \n')
+    with open("log.txt", "a") as file:
+        file.write(f'python - {formatted_time} -- {AUDIO_PATH}, {CALLER_ID}, {EXTENSION_ID} \n')
 
     if AUDIO_PATH != 'No data':
         send_telegram_file(AUDIO_PATH, CALLER_ID, EXTENSION_ID)
