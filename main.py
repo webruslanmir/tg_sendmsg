@@ -1,8 +1,13 @@
 import argparse
 import telebot
 import os
-
+from datetime import datetime
 from dotenv import load_dotenv
+
+current_time = datetime.now()
+formatted_time = current_time.strftime("%d-%m-%Y %H:%M:%S")
+
+
 
 # Создание парсера аргументов
 parser = argparse.ArgumentParser()
@@ -55,9 +60,9 @@ def send_telegram_file(file_path, CALLER_ID, EXTENSION_ID):
     Отправить файл с комментарием
     """
     text = f'Входящий звонок от {CALLER_ID} на {EXTENSION_ID}'
-    file = open(file_path, 'rb')
-    bot.send_document(CHAT_ID, file, caption=text)
-    file.close()
+    binary_file = open(file_path, 'rb')
+    bot.send_document(CHAT_ID, binary_file, caption=text)
+    binary_file.close()
 
 # def send_telegram_message(CALLER_ID):
 #     text = f'Входящий звонок от { CALLER_ID }'
@@ -65,6 +70,9 @@ def send_telegram_file(file_path, CALLER_ID, EXTENSION_ID):
 
 
 if '__main__' == __name__:
+    with open("log.txt", "w") as file:
+        file.write(f'{formatted_time} -- {AUDIO_PATH}, {CALLER_ID}, {EXTENSION_ID} \n')
+
     if AUDIO_PATH != 'No data':
         send_telegram_file(AUDIO_PATH, CALLER_ID, EXTENSION_ID)
     else:
