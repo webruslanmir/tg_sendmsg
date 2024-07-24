@@ -7,6 +7,6 @@ Sending messages to Telegram via a bot (PyTelegramBotApi)
 Asterisk extension config
 ```
 ;;;Отправка  номмера в ТГ
-exten => _X.,n,System(/opt/tg_sendmsg/venv/bin/python /opt/tg_sendmsg/main.py --caller_id ${CALLERID(num)})
+/opt/tg_sendmsg/venv/bin/python /opt/tg_sendmsg/main.py --caller_id ${CALLERID(num)} --audio_path ${AUDIO_PATH}
 ;;;
 ```
